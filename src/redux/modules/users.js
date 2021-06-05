@@ -1,4 +1,6 @@
 import axios from "axios";
+import { put, delay, call, takeEvery } from "redux-saga/effects";
+import { push } from "connected-react-router";
 
 // 액션 타입 정의
 const GET_USERS_START = "redux-start/users/GET_USER_START"; // 깃헙 API 호출을 시작하는 것을 의미
@@ -110,4 +112,32 @@ export function getUsersPromise() {
       return res.data;
     },
   };
+}
+
+// redux-saga
+const GET_USERS_SAGA_START = "GET_USERS_SAGA_START";
+
+function* getUsersSage(action) {
+  try {
+    yield put(getUsersStart());
+
+    // sleep
+    yield delay(2000);
+
+    const res = yield call(axios.get, "https://api.github.com/users");
+    yield put(getUsersSuccess(res.data));
+    yield put(push("/"));
+  } catch (error) {
+    yield put(getUsersFail(error));
+  }
+}
+
+export function getUsersSagaStart() {
+  return {
+    type: GET_USERS_SAGA_START,
+  };
+}
+
+export function* usersSage() {
+  yield takeEvery(GET_USERS_SAGA_START, getUsersSage);
 }
