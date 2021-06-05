@@ -11,7 +11,7 @@ export default function UserList({ users, getUsers }) {
   return (
     <ul>
       {users.map((user) => (
-        <li key={user.id}>{JSON.stringify(user)}</li>
+        <li key={user.id}>{user.login}</li>
       ))}
     </ul>
   );
