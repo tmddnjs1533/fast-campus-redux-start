@@ -1,38 +1,31 @@
-// 액션 타입 정의
-const ADD_TODO = "redux-start/todos/ADD_TODO";
-const COMPLETE_TODO = "redux-start/todos/COMPLETE_TODO";
+import { createActions, handleActions } from "redux-actions";
 
-// 액션 생성 함수
-// {type: ADD_TODO, text: '할일'}
-export function addTodo(text) {
-  return {
-    type: ADD_TODO,
-    text,
-  };
-}
-// {type: COMPLETE_TODO, index: 3}
-export function completeTodo(index) {
-  return {
-    type: COMPLETE_TODO,
-    index,
-  };
-}
+export const { addTodo, completeTodo } = createActions(
+  "ADD_TODO",
+  "COMPLETE_TODO",
+  {
+    prefix: "redux-start/todos",
+  }
+);
 // 초기값
 const initialState = [];
 
-// 리듀서
-export default function reducer(previousState = initialState, action) {
-  if (action.type === ADD_TODO) {
-    return [...previousState, { text: action.text, done: false }];
-  }
+const reducer = handleActions(
+  {
+    ADD_TODO: (state, { payload: text }) => [
+      ...state,
+      { text: text, done: false },
+    ],
+    COMPLETE_TODO: (state, { payload: n }) =>
+      state.map((todo, index) => {
+        if (index === n) {
+          return { ...todo, done: true };
+        }
+        return todo;
+      }),
+  },
+  initialState,
+  { prefix: "redux-start/todos" }
+);
 
-  if (action.type === COMPLETE_TODO) {
-    return previousState.map((todo, index) => {
-      if (index === action.index) {
-        return { ...todo, done: true };
-      }
-      return todo;
-    });
-  }
-  return previousState;
-}
+export default reducer;
