@@ -4,23 +4,17 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
-import { addTodo } from "./redux/actions";
+import { addTodo, completeTodo, showComplete } from "./redux/actions";
 
-const unsubscribe = store.subscribe(() => {
+store.subscribe(() => {
   console.log(store.getState());
   // return 값이 구독 제거 함수.
 });
 
-// console.log(store);
+store.dispatch(addTodo("할일"));
+store.dispatch(completeTodo(0));
+store.dispatch(showComplete());
 
-store.dispatch(addTodo("코딩"));
-store.dispatch(addTodo("read book"));
-store.dispatch(addTodo("eat"));
-unsubscribe(); //구독 제거 함수.
-
-store.dispatch(addTodo("코딩"));
-store.dispatch(addTodo("read book"));
-store.dispatch(addTodo("eat"));
 ReactDOM.render(
   <React.StrictMode>
     <App />
